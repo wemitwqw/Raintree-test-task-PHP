@@ -1,6 +1,5 @@
 <?php 
     include 'PatientRecord.php';
-    include 'Insurance.php';
 
     class Patient implements PatientRecord {
         public $_id;
@@ -39,9 +38,14 @@
             $date = date_parse_from_format("m-d-y", $input);
             $date = "{$date['year']}-{$date['month']}-{$date['day']}";
             $date = strtotime($date);
-            // Patient Number, First Last, Insurance name, Is Valid
+
             foreach($this->records as $key => $value){
-                $isValid = $date >= strtotime($this->records[$key]->from_date) && $date <= strtotime($this->records[$key]->to_date) ? "Yes" : "No";
+                if(is_null($this->records[$key]->to_date)){
+                    $isValid = "Yes";
+                }
+                if(!is_null($this->records[$key]->to_date)){
+                    $isValid = $date >= strtotime($this->records[$key]->from_date) && $date <= strtotime($this->records[$key]->to_date) ? "Yes" : "No";
+                }
                 printf("{$this->pn}, {$this->get_name()}, {$this->records[$key]->iname}, {$isValid}");
                 printf("\n");
             }
